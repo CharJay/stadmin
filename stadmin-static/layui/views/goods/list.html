@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>列表</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css"  media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css"  media="all">
+  <style type="text/css">
+  .layui-table-cell {
+	  height: 50px;
+	  line-height: 50px;
+  }
+  .layui-table img {
+  	  width: 50px;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-body">
+            
+            <form id="select-form" class="layui-form" lay-filter="component-form-group">
+              <!--新增-->
+              <div class="layui-form-item">
+                <div class="layui-inline">
+                  <div class="layui-btn-group table-operate-btn">
+                    <button class="layui-btn" type="button" data-type="create"><i class="layui-icon">&#xe608;</i>新建</button>
+                  </div> 
+                </div>
+                <!--条件查询-->
+                <div class="layui-inline">
+                  <div class="layui-input-inline">
+                    <input type="text" name="name" autocomplete="off" class="layui-input" placeholder="商品名称">
+                  </div>
+                  <div class="layui-input-inline">
+                    <select name="status" lay-verify="" placeholder="状态">
+                      <option value="">==全部状态==</option>
+                      <option value="1" >在架</option>
+                      <option value="2" >已下架</option>
+                      <option value="3" >内部</option>
+                    </select> 
+                  </div>
+                  <div class="layui-input-inline">
+                    <select name="goodsType" lay-verify="" placeholder="商品类型">
+                      	<option value="">==全部商品类型==</option>
+                      	<option value="1">普通商品</option>
+                  		<option value="11" >优惠券</option>
+                    </select> 
+                  </div>
+                </div>
+
+                <!--搜索-->
+                <div class="layui-inline">
+                  <div class="layui-btn-group table-operate-btn">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="component-form-submit"><i class="layui-icon">&#xe615;</i>搜索</button>
+                  </div> 
+                </div>
+              </div>
+            </form>
+
+            <!--数据表格 -->
+            <table class="layui-hide" id="table-operate" lay-filter="table-operate"></table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="../../layuiadmin/layui/layui.js" ></script>  
+  <script>
+
+  layui.config({
+    base: '../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    app: 'lib/app' 
+  }).use([ 'table','laydate','app'], function(){
+    var table = layui.table
+    ,laydate = layui.laydate
+    ,$ = layui.$
+    ,app = layui.app
+    ,setter = layui.setter
+    ,form = layui.form
+    ,dataTable;//引入了app，那么默认引入了setter，因为app里面引入了setter
+    
+    var global={
+      tableName:'stmGoods',
+    }
+    start();
+
+
+    function start(){
+      initData();
+      addEvent();
+    }
+
+    function addEvent(){
+       
+
+      //日期
+      lay('.date').each(function(){
+        laydate.render({
+          elem: this
+          ,trigger: 'click'
+          ,type:'date'
+          ,format:'yyyy-MM-dd'
+          ,theme: 'molv'
+        });
+      });
+
+      //监听工具条
+      table.on('tool(table-operate)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'detail'){
+          //查看
+          layer.open({
+            type: 2,
+            title: '查看',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['80%', '70%'],
+            content: './view.html?seqId='+data.seqId //iframe的url
+          }); 
+        } else if(obj.event === 'down'){
+          //下架
+          var me = $(this);
+          top.layer.confirm('真的要下架么？', function(index){
+            downById(data.seqId);
+            obj.update({
+                'status': 2
+            });
+	        me.before('<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="up">上架</a>').remove();
+            top.layer.close(index);
+          });
+        } else if(obj.event === 'up'){
+          //上架
+          var me = $(this);
+          top.layer.confirm('真的要上架么？', function(index){
+            upById(data.seqId);
+            obj.update({
+                'status': 1
+            });
+            me.before('<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="down">下架</a>').remove();
+            top.layer.close(index);
+          });
+        } else if(obj.event === 'edit'){
+          //编辑
+          layer.open({
+            type: 2,
+            title: '编辑',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['80%', '70%'],
+            content: './edit.html?seqId='+data.seqId //iframe的url
+          }); 
+        } else if(obj.event === 'editContent'){
+          //编辑详情
+          var index = layer.open({
+            type: 2,
+            title: '编辑详情',
+            content:'./detail.html?seqId='+data.seqId  //'./editContent.html?seqId='+data.seqId //iframe的url
+          });
+          layer.full(index);
+        } else if(obj.event === 'showDetail'){
+        	var index = layer.open({
+  			  	title: '商品详情',
+  			  	area: ['900px', '90%'],
+  			  	content: data.detail
+  			});
+        }
+      });
+
+      //自定义事件监听
+      var activeEvent = {
+        getCheckData: function(){ //获取选中数据
+          var checkStatus = table.checkStatus('table-operate')
+          ,data = checkStatus.data;
+          layer.alert(JSON.stringify(data));
+        }
+        ,create: function(){ //新建
+          layer.open({
+            type: 2,
+            title: '新建',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['80%', '70%'],
+            content: './add.html' //iframe的url
+          }); 
+        }
+      };
+      
+      $('.table-operate-btn .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        activeEvent[type] ? activeEvent[type].call(this) : '';
+      });
+
+      //表格监听
+      form.render(null, 'component-form-group');
+      form.on('submit(component-form-submit)', function(data){
+        var param={};
+        $.each(data.field,function(index,value){
+          if(value){//过滤空值
+            param[index]=value;
+          }
+        })
+        dataTable.reload({
+          page: {
+            curr: 0 //重新从第 1 页开始
+          },
+          where: param
+        });
+        return false;
+      });
+    }
+    
+
+    function initData(){
+      dataTable=table.render({
+        elem: '#table-operate'
+        ,url: app.getUrl('readAndCount',[global.tableName])
+   	  	,cellMinWidth: 80
+        ,method: 'post'
+        ,height: 'full-110'
+        ,request: setter.request
+        ,response: setter.response
+        ,page: true
+        ,limit: 10
+        ,where: {
+          //...
+        }
+        ,cols: [[
+          {type:'checkbox', fixed: 'left'}
+          ,{field:'seqId', minWidth: '80', title: 'ID', sort: true, fixed: 'left'}
+          ,{field:'name', minWidth: '180', title: '商品名', sort: true, event: 'showDetail', style:'cursor: pointer;text-decoration:underline;color:orange;'}
+          ,{field:'intro', minWidth: '200', title: '商品介绍'}
+          ,{field:'imgUrl', minWidth: '188', title: '商品图', templet: '#table_imgUrl'}
+         // ,{field:'spe', minWidth: '80', title: '规格'}
+         // ,{field:'place', minWidth: '110', title: '产地'}
+          ,{field:'price', minWidth: '90', title: '价格', templet: '#table_price'}
+          ,{field:'priceExpress', title: '运费', templet: '#table_priceExpress'}
+          ,{field:'priceCost', minWidth: '90', title: '成本价', templet: '#table_priceCost'}
+          ,{field:'priceDis', title: '抵扣金额', templet: '#table_priceDis'}
+          ,{field:'priceCut', minWidth: '90', title: '满减金额', templet: '#table_priceCut'}
+          ,{field:'status', title: '状态', templet: '#table_status'}
+          ,{field:'isGift', title: '可赠送', templet: '#table_isGift'}
+          ,{field:'goodsType', minWidth: '100', title: '商品类型', templet: '#table_goodsType', sort: true}
+          ,{field:'dataOrder', title: '排序', sort: true}
+          ,{field:'createTime', minWidth: '120', title: '创建时间', templet: '#table_createTime', sort: true}
+          ,{title:'操作', minWidth:'230', align:'left', fixed: 'right', toolbar: '#table-operate-bar'}
+        ]]
+      });
+      
+    }
+
+    /* function deleteById(seqId){
+      app.ajax({
+        url: app.getUrl('deleteById',[global.tableName]), //实际使用请改成服务端真实接口
+        data:{'seqId':seqId},
+        type: "post",
+        dataType: "json",
+        success: function(data){
+          
+        }
+      });
+    } */
+    function downById(seqId){
+      app.ajax({
+        url: app.getUrl('updateGoodsStatusById'), //实际使用请改成服务端真实接口
+        data:{'seqId':seqId,'status':2},
+        type: "post",
+        dataType: "json",
+        success: function(data){
+        	top.layer.msg('下架成功');
+        }
+      });
+    }
+    function upById(seqId){
+      app.ajax({
+        url: app.getUrl('updateGoodsStatusById'), //实际使用请改成服务端真实接口
+        data:{'seqId':seqId,'status':1},
+        type: "post",
+        dataType: "json",
+        success: function(data){
+          	top.layer.msg('上架成功');
+        }
+      });
+    }
+
+    window.reloadTable=function(){
+      dataTable.reload();
+    }
+    
+  });
+  </script>
+
+  <!-- 模板 -->
+  <script type="text/html" id="table-operate-bar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="editContent">编辑详情</a>
+	{{#  if(d.status==1){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="down">下架</a>
+    {{#  } else if(d.status==2){ }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="up">上架</a>
+    {{#  } }}
+  </script>
+
+  <!-- 数据字典 -->
+  <script type="text/html" id="table_goodsType">
+    {{#  if(d.goodsType==1){ }}
+      <span class="layui-badge layui-bg-blue">普通商品</span>
+    {{#  } else if(d.goodsType==11){ }}
+      <span class="layui-badge">优惠券</span>
+    {{#  } else{ }}
+      <span class="layui-badge layui-bg-gray">未知</span>
+    {{#  } }}
+  </script>
+  <script type="text/html" id="table_status">
+    {{#  if(d.status==1){ }}
+      <span class="layui-badge layui-bg-blue">在架</span>
+    {{#  } else if(d.status==2){ }}
+      <span class="layui-badge">已下架 </span>
+    {{#  } else if(d.status==3){ }}
+      <span class="layui-badge layui-bg-gray">内部 </span>
+    {{#  } else{ }}
+      未知
+    {{#  } }}
+  </script>
+  <script type="text/html" id="table_isGift">
+    {{#  if(d.isGift==1){ }}
+      <span class="layui-badge layui-bg-blue">可赠送</span>
+    {{#  } else if(d.isGift==0){ }}
+      <span class="layui-badge">不可送 </span>
+    {{#  } }}
+  </script>
+  <!-- 分类 10制造商 15电气 20茶 30 酒 40春 50限时购 90积分区  100 升级后商品 
+  <script type="text/html" id="table_classify">
+    {{#  if(d.classify==19){ }}
+      <span class="layui-badge-rim">茶轻品</span>
+    {{#  } else if(d.classify==20){ }}
+      <span class="layui-badge-rim">茗茶馆 </span>
+    {{#  } else if(d.classify==21){ }}
+      <span class="layui-badge-rim">茶物馆 </span>
+    {{#  } else if(d.classify==50){ }}
+      <span class="layui-badge layui-bg-orange">限时购 </span>
+    {{#  } else if(d.classify==90){ }}
+      <span class="layui-badge">乐豆区 </span>
+	{{#  } else{ }}
+      	未知
+    {{#  } }}
+  </script>-->
+  <script type="text/html" id="table_imgUrl">
+	{{#  layui.each(d.imgUrl.split(';'), function(index, item){ }}
+    <img src="{{ item || '' }}" />
+	{{#  }); }}
+  </script>
+  <script type="text/html" id="table_price">
+	{{ (d.price / 100).toFixed(2) }}
+  </script>
+  <script type="text/html" id="table_priceExpress">
+	{{ (d.priceExpress / 100).toFixed(2) }}
+  </script>
+  <script type="text/html" id="table_priceCost">
+	{{ (d.priceCost / 100).toFixed(2) }}
+  </script>
+  <script type="text/html" id="table_priceDis">
+	{{ (d.priceDis / 100).toFixed(2) }}
+  </script>
+  <script type="text/html" id="table_priceCut">
+	{{ (d.priceCut / 100).toFixed(2) }}
+  </script>
+  <script type="text/html" id="table_createTime">
+	{{ d.createTime.substring(0,10) }}
+  </script>
+</body>
+</html>

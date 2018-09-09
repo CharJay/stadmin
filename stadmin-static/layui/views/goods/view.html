@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>编辑</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css"  media="all">
+  <link rel="stylesheet" href="../../layuiadmin/style/admin.css"  media="all">
+  <style type="text/css">
+    .layui-form-item .layui-inline{
+      margin-top: 10px;
+    }
+    #imgUrl > img {
+	    width: 100px;
+	    float:left;
+	    margin-left: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-body" style="padding: 15px;">
+        <form id="form" class="layui-form" action="" lay-filter="component-form-group">
+          
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">商品名</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="name" autocomplete="off" placeholder="请输入商品名" class="layui-input ">
+              </div>
+            </div>            
+            <div class="layui-inline">
+              <label class="layui-form-label">商品介绍</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="intro" autocomplete="off" placeholder="请输入商品介绍" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">规格</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="spe" autocomplete="off" placeholder="请输入规格" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">产地</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="place" autocomplete="off" placeholder="请输入产地" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">价格</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="price" autocomplete="off" placeholder="请输入价格" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">运费</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="priceExpress" autocomplete="off" placeholder="请输入运费" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">成本价</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="priceCost" autocomplete="off" placeholder="请输入成本价" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">抵扣金额</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="priceDis" autocomplete="off" placeholder="请输入抵扣金额" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">满减金额</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="priceCut" autocomplete="off" placeholder="请输入满减金额" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">状态</label>
+              <div class="layui-input-inline">
+                <select name="status" id="status" data-tagname="select" lay-filter="status">
+                  <option value="1" selected="selected">在架</option>
+                  <option value="2" >已下架</option>
+                  <option value="2" >内部</option>
+                </select>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">是否可赠送</label>
+              <div class="layui-input-inline">
+                <select name="isGift" id="isGift" data-tagname="select" lay-filter="isGift">
+                  <option value="0" selected="selected">不可赠送</option>
+                  <option value="1" >可赠送</option>
+                </select>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">分类</label>
+              <div class="layui-input-inline">
+              <!-- 分类 19茶轻品 20茗茶馆 21茶物馆  50限时购 90乐豆区 -->  
+                <select name="classifyId" id="classify" data-tagname="select" lay-filter="classify">
+                  <option value="19">茶轻品</option>
+                  <option value="20">茗茶馆</option>
+                  <option value="21">茶物馆</option>
+                  <option value="50" selected="selected">限时购</option>
+                  <option value="90">乐豆区</option>
+                </select>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">商品类型</label>
+              <div class="layui-input-inline">
+                <select name="goodsType" id="goodsType" data-tagname="select" lay-filter="goodsType">
+                  <option value="1" selected="selected">普通商品</option>
+                  <option value="11" >优惠券</option>
+                </select>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">排序值</label>
+              <div class="layui-input-inline">
+                <input type="text" data-tagname="input" name="dataOrder" autocomplete="off" placeholder="请输入排序值" class="layui-input">
+              </div>
+            </div>
+            <div class="" style="margin-top: 20px;">
+              <label class="layui-form-label">图片</label>
+              <div data-tagname="input" name="imgUrl" id="imgUrl"></div>
+            </div>
+          </div>
+
+          <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+              <div class="layui-footer" style="left: 0;">
+                <!-- <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button> -->
+                <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    
+  <script src="../../layuiadmin/layui/layui.js" ></script>  
+  <script>
+  layui.config({
+    base: '../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    app: 'lib/app' //主入口模块
+  }).use(['app', 'form', 'laydate'], function(){
+    var $ = layui.$
+    ,element = layui.element
+    ,layer = layui.layer
+    ,laydate = layui.laydate
+    ,app = layui.app
+    ,setter = layui.setter
+    ,form = layui.form;
+    
+    var global={
+      tableName:'stmGoods',
+      seqId:app.param.seqId,
+    }
+
+    start();
+
+    function start(){
+      readById();
+      //initClassify();
+      addEvent();
+    }
+    
+  //重新渲染表单
+    function renderForm(){
+       form.render();
+    }
+  
+    //初始化商品分类
+    function initClassify(){
+    	app.ajax({
+    		url: app.getUrl("getClassify"),
+    	    type: "post",
+    	    dataType: "json",
+    	    success: function(data){
+    	    	var arr = eval(data);
+    	    	for(var i=0 ;i < arr.length ;i++){
+    	    		var option = $("<option></option>");
+    	    		option.attr("value",arr[i].seqId);
+    	    		option.html(arr[i].name);
+		    	    $("#classify").append(option);
+    	    	}
+    	    	readById();
+    	    }
+    	});
+    }
+    
+    function addEvent(){
+      
+    }
+
+    function readById(){
+
+      app.ajax({
+        url: app.getUrl('readById',[global.tableName]), //实际使用请改成服务端真实接口
+        data:{'seqId':global.seqId},
+        type: "post",
+        dataType: "json",
+        success: function(data){
+          $.each(data, function(key, value) {
+
+            var tag=$('#form [name="'+key+'"]');
+            var tagname=tag.data('tagname');
+            if(tagname){
+              if(tagname.indexOf('date')>=0){
+                  laydate.render({
+                    elem: '#'+key,
+                    value: value,
+                    type: tagname,
+                    isInitValue: true //允许填充初始值
+                  });
+              } else if(tagname=='select') {
+                  tag.val(value);
+              } else {
+            	  tag.val(value || '--');
+              }
+              
+              if(key == 'price' || key == 'priceExpress' || key == 'priceCost' || key == 'priceDis' || key == 'priceCut' ) {
+            	  tag.val((value/100).toFixed(2));
+              }
+              if(key == 'imgUrl') {
+            	  $('#imgUrl').empty();
+            	  $.each(value.split(';'), function(i, o) {
+	            	  $('#imgUrl').append('<img src="'+o+'" />');
+            	  });
+              }
+
+              $(tag).attr('disabled','disabled');
+            }
+
+            //初始化数据后再渲染
+            form.render(null, 'component-form-group');
+
+          });
+          renderForm();
+        }
+      });
+      
+    }
+    
+
+  });
+  </script>
+</body>
+</html>
