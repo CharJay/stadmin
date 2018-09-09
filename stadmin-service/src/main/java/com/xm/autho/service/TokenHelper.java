@@ -21,13 +21,11 @@ import com.framework.core.utils.crypto.CipherUtil;
 @Service
 public class TokenHelper {
 
-
 //	@Autowired
 //	public EntityManagerMini em;
 	@Autowired
 	@Qualifier("coreDaoAgent")
 	public CoreDaoAgent daoAgent;
-	
 	@Autowired
 	@Qualifier("tokenService")
 	public TokenService tokenService;
@@ -77,7 +75,7 @@ public class TokenHelper {
 	 * @return 已授权用户ID
 	 */
 	@Cacheable(cacheNames = CoreCacheConstants.CACHE_5MIN, key = "'auth_token@'+#p0")
-	private Long auth(String token) {
+	public Long auth(String token) {
 		if (StringUtils.isEmpty(token))
 			return null;
 //		SysTokenPojo tokenObj = em.find(SysTokenPojo.class, token);

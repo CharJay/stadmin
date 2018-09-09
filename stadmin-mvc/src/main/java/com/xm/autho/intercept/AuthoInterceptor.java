@@ -46,7 +46,7 @@ public class AuthoInterceptor implements HandlerInterceptor {
         // 取用户权限
         Long userId = tokenHelper.auth(request);
         if(userId==null){
-        	doResponseForAuthFailed( request, response, new RetMsg<>(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr()) );
+        	doResponseForAuthFailed( request, response, RetMsg.error(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr()) );
             return false;
         }
         List<Long> rolesIds = authorizationService.getRoleIdsByUserId(userId);
@@ -56,7 +56,7 @@ public class AuthoInterceptor implements HandlerInterceptor {
             authos.addAll(list);
         }
         if(authos.isEmpty()){
-        	doResponseForAuthFailed( request, response, new RetMsg<>(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr()) );
+        	doResponseForAuthFailed( request, response, RetMsg.error(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr()) );
             return false;
         }
         
@@ -66,7 +66,7 @@ public class AuthoInterceptor implements HandlerInterceptor {
             switch (methodAnnotation.logical()) {
             case AND:
                 if (!authos.contains( p )) {
-                    doResponseForAuthFailed( request, response, new RetMsg<>(CodeEnum.PERMISSION_DENIED.getCode(), CodeEnum.PERMISSION_DENIED.getDescr()) );
+                    doResponseForAuthFailed( request, response, RetMsg.error(CodeEnum.PERMISSION_DENIED.getCode(), CodeEnum.PERMISSION_DENIED.getDescr()) );
                     return false;
                 }
                 break;
@@ -80,7 +80,7 @@ public class AuthoInterceptor implements HandlerInterceptor {
             }
         }
         if (methodAnnotation.logical() == Logical.OR) {
-            doResponseForAuthFailed( request, response, new RetMsg<>(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr()) );
+            doResponseForAuthFailed( request, response, RetMsg.error(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr()) );
             return false;
         } else {
             return true;

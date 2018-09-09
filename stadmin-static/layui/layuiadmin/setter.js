@@ -25,7 +25,7 @@ layui.define(['laytpl', 'layer', 'util','jquery'], function(exports){
 
     //table 自定义请求字段
     ,request: {
-      tokenName: "_vc" //自动携带 token 的字段名（如：access_token）。可设置 false 不携带。
+      tokenName: "token" //自动携带 token 的字段名（如：access_token）。可设置 false 不携带。
       ,pageName: 'currentPage' //页码的参数名称，默认：page
       ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
 

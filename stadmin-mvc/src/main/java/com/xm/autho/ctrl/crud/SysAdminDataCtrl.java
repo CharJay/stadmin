@@ -10,6 +10,7 @@ import com.framework.core.db.bean.Page;
 import com.framework.core.db.bean.ParamMap;
 import com.framework.core.db.bean.RetMsg;
 import com.framework.core.exception.BusinessException;
+import com.framework.core.utils.crypto.CipherUtil;
 import com.xm.autho.common.constants.R;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -51,7 +52,9 @@ public class SysAdminDataCtrl {
 		SysAdminPojo pojo=new SysAdminPojo();
 		try {
 			BeanUtils.copyProperties(pojo, param);
-			pojo.setPassword("7c4a8d09ca3762af61e59520943dc26494f8941b");
+			//默认密码
+			pojo.setSalt(CipherUtil.gnerateSaltBase64() );
+			pojo.setPassword(CipherUtil.sha256Hash2Hex( R.SysConfig.DEFAULT_PWD, pojo.getSalt() ));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("",e);
 		}

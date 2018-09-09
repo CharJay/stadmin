@@ -37,7 +37,7 @@ public class AuthoCtrl {
 	public RetMsg<String> menu(HttpServletRequest request) {
 		Long userId = tokenHelper.auth(request);
 		if(userId==null){
-			return new RetMsg<>(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
+			return RetMsg.error(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
 		}
 		List<Long> rolesIds = authoService.getRoleIdsByUserId(userId);
 		if(rolesIds.isEmpty()){
@@ -60,7 +60,7 @@ public class AuthoCtrl {
 	public RetMsg<String> button(HttpServletRequest request,Long superId) {
 		Long userId = tokenHelper.auth(request);
 		if(userId==null){
-			return new RetMsg<>(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
+			return RetMsg.error(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
 		}
 		List<Long> rolesIds = authoService.getRoleIdsByUserId(userId);
 		if(rolesIds.isEmpty()){

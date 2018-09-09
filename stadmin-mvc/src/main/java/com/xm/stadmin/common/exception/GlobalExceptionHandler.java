@@ -21,15 +21,15 @@ class GlobalExceptionHandler {
         if(e instanceof BusinessException){
             logger.error("businessExceptionHandler", e);
             BusinessException ee = (BusinessException)e;
-            return new ResponseEntity<>(new RetMsg<>(ee.getErrCode(), ee.getLocalizedMessage()), HttpStatus.OK);
+            return new ResponseEntity<>(RetMsg.error(ee.getErrCode(), ee.getLocalizedMessage()), HttpStatus.OK);
         }else if(e instanceof WebAssertException){
             logger.error("webAssertExceptionHandler", e);
             WebAssertException wae = (WebAssertException)e;
-            return new ResponseEntity<>(new RetMsg<>(wae.getErrCode(), wae.getLocalizedMessage()), HttpStatus.OK);
+            return new ResponseEntity<>(RetMsg.error(wae.getErrCode(), wae.getLocalizedMessage()), HttpStatus.OK);
         }else{
             logger.error("exceptionHandler", e);
             CodeEnum.ERROR.getCode();
-            return new ResponseEntity<>(new RetMsg<>(CodeEnum.ERROR.getCode(), CodeEnum.ERROR.getDescr()), HttpStatus.OK);
+            return new ResponseEntity<>(RetMsg.error(CodeEnum.ERROR.getCode(), CodeEnum.ERROR.getDescr()), HttpStatus.OK);
         }
     }
 }

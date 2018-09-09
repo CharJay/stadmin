@@ -34,7 +34,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 //		if(true)
 //			return true;
 		
-		RetMsg<String> ret = new RetMsg<>(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
+		RetMsg<String> ret = RetMsg.error(CodeEnum.LOGON_FAILURE.getCode(), CodeEnum.LOGON_FAILURE.getDescr());
 		try {
 			String retStr = JacksonHelper.obj2jsonThrowRuntime(ret);
 			response.setContentType("application/json");

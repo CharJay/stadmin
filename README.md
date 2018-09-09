@@ -1,4 +1,4 @@
-# stadmin
+# 商品管理系统
 
 #### 项目介绍
 基于framework-springboot实现的简易商城后台管理系统
@@ -15,7 +15,9 @@ springboot、druid、redis、mysql、layui
 - [x] 用户角色权限系统
 - [x] 商品管理
 - [ ] 数据字典
-- [ ] 传输加密处理
+- [ ] 机构门户
+- [ ] 用户多角色
+
 
 #### 部署教程
 1. 下载framework与stadmin

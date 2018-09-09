@@ -6,7 +6,6 @@ import com.framework.core.db.agent.CoreServiceAgent;
 import com.framework.core.db.bean.ParamMap;
 import com.framework.core.db.bean.RetMsg;
 import com.xm.autho.param.SysAdminParam;
-import com.xm.autho.service.TokenService;
 import com.xm.autho.vo.AdminVo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -43,8 +42,6 @@ public class 	LoginCtrl {
 	private CoreServiceAgent serviceAgent;
 	@Autowired
 	private TokenHelper tokenHelper;
-	@Autowired
-	private TokenService tokenService;
 	/**
 	 * token有效期，秒
 	 * 
@@ -66,7 +63,7 @@ public class 	LoginCtrl {
 	public RetMsg<LoginVo> login(String username, String password) {
 		logger.debug("signin. username={},password={}", username, password);
 		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-			return new RetMsg<>(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr());
+			return RetMsg.error(CodeEnum.PARAMS_ERROR.getCode(), CodeEnum.PARAMS_ERROR.getDescr());
 		}
 		// 查询账号
 		String sql = String.format("select * from %sadmin where username=:username", R.SysConfig.SYS_TABLE_PREFIX);
@@ -74,18 +71,18 @@ public class 	LoginCtrl {
 				ParamMap.newOne("username", username), SysAdminPojo.class);
 		if (admin == null) {
 			logger.debug("could not find user by username {}", username);
-			return new RetMsg<>(BusinessCode.Account.USERNAME_NOT_FOUND, "账号不存在");
+			return RetMsg.error(BusinessCode.Account.USERNAME_NOT_FOUND, "账号不存在");
 		}
 		logger.debug("find user. id={},username={}", admin.getSeqId(), username);
 		// 密码校验
-		if (!CipherUtil.sha1Hash2Hex(password).equals(admin.getPassword())) {
-			logger.debug("password is wrong for user {}", admin.getSeqId());
-			return new RetMsg<>(BusinessCode.Account.PASSWORD_ERROR, "密码错误");
+		String hashPwd=CipherUtil.sha256Hash2Hex( password,  admin.getSalt());
+		if(!CipherUtil.slowEquals( hashPwd, admin.getPassword() )){
+			return RetMsg.error(BusinessCode.Account.PASSWORD_ERROR, "密码错误");
 		}
 		// 是否封号
 		if (Integer.valueOf(2).equals(admin.getStatus())) {
 			logger.debug("user is banned for username {}", admin.getSeqId());
-			return new RetMsg<>(BusinessCode.Account.IS_BANNED, "封号");
+			return RetMsg.error(BusinessCode.Account.IS_BANNED, "封号");
 		}
 		// **********验证OK******
 		//单点登录
@@ -125,22 +122,21 @@ public class 	LoginCtrl {
 	 */
 	@RequestMapping(value = { "updatePwd" }, method = RequestMethod.POST)
 	@ResponseBody
-	public RetMsg<Object> updatePwd(HttpServletRequest request,String oldPassword,String password,String repassword) {
+	public RetMsg<Object> updatePwd(HttpServletRequest request,String oldPassword,String password,String rePassword) {
 		Long userId = tokenHelper.auth(request);
 		SysAdminPojo admin = serviceAgent.quickCrudService.getById(SysAdminPojo.class, userId);
 		if(admin!=null){
 			// 密码校验
-			if (!CipherUtil.sha1Hash2Hex(oldPassword).equals(admin.getPassword())) {
-				return new RetMsg<>(BusinessCode.Account.PASSWORD_ERROR, "旧密码错误");
+			String hashPwd=CipherUtil.sha256Hash2Hex( oldPassword,  admin.getSalt());
+			if(!CipherUtil.slowEquals( hashPwd, admin.getPassword() )){
+				return RetMsg.error(BusinessCode.Account.PASSWORD_ERROR, "旧密码错误");
 			}
 			//确认密码
-			if(!password.equals(repassword)){
-				return new RetMsg<>(BusinessCode.Account.PASSWORD_ERROR, "两次密码不一致");
+			if(!password.equals(rePassword)){
+				return RetMsg.error(BusinessCode.Account.PASSWORD_ERROR, "两次密码不一致");
 			}
-			if(password.length()<6){
-				return new RetMsg<>(BusinessCode.Account.PASSWORD_ERROR, "密码不小于6位数");
-			}
-			admin.setPassword(CipherUtil.sha1Hash2Hex(password));
+			admin.setSalt(CipherUtil.gnerateSaltBase64() );
+			admin.setPassword(CipherUtil.sha256Hash2Hex( password, admin.getSalt() ));
 			serviceAgent.quickCrudService.updateById(admin);
 		}
 		return RetMsg.success();
