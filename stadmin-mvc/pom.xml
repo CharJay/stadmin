@@ -14,7 +14,7 @@
 	
 	<parent>
 		<groupId>com.framework.core</groupId>
-		<artifactId>framework-parent</artifactId>
+		<artifactId>framework-thin</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	

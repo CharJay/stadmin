@@ -1,4 +1,4 @@
-package com.xm.autho.ctrl;
+package com.xm.autho.ctrl.druid;
 
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import org.springframework.web.bind.annotation.GetMapping;
