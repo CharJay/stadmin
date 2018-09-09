@@ -1,4 +1,4 @@
-# 商品管理系统
+# 商城管理系统
 
 #### 项目介绍
 基于framework-springboot实现的简易商城后台管理系统
@@ -21,7 +21,7 @@ springboot、druid、redis、mysql、layui
 
 #### 部署教程
 1. 下载framework与stadmin
-2. 导入数据库教程 /stadmin-sqlscript/init_data.sql
+2. 导入数据库 /stadmin-sqlscript/init_data.sql
 3. 配置 application.properties
 ```
 spring.datasource.url = jdbc:mysql://127.0.0.1:3306/stadmin

@@ -100,7 +100,7 @@ layui.define(["setter"],function(exports){
               for(i=0;i<authArr.length;i++){
                 var node=authArr[i];
                 var autho=$(node).attr('autho');
-                if(data.indexOf(autho)>=0){
+                if(data.indexOf(autho)>=0 || !setter.checkAutho){
                   $(node).removeClass('layui-hide');
                 }
               }

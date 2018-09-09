@@ -201,6 +201,9 @@
           ,{field:'createTime', title: '创建时间'}
           ,{title:'操作', align:'center', fixed: 'right', toolbar: '#table-operate-bar'}
         ]]
+        ,done:function(){
+            app.initButton(app.param.mid);
+        }
       });
       
     }
