@@ -83,7 +83,7 @@
 			var authoId = $(data.elem).attr('name');
 			
 			app.ajax({
-		        url: app.getUrl('grantAutho'), //实际使用请改成服务端真实接口
+		        url: app.getUrl('grantAutho'),
 		        data:{'roleId': global.seqId, 'authoId': authoId, 'isGrant': data.elem.checked?1:0},
 		        type: "post",
 		        dataType: "json",
@@ -96,7 +96,7 @@
     function getRoleList(){
 
       app.ajax({
-        url: app.getUrl('getAuthoList'), //实际使用请改成服务端真实接口
+        url: app.getUrl('getAuthoList'),
         data:{'roleId': global.seqId},
         type: "post",
         dataType: "json",

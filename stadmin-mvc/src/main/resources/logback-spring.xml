@@ -2,10 +2,10 @@
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<include
-		resource="org/springframework/boot/logging/logback/console-appender.xml" />
+			resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
 	<appender name="ROLLING_FILE"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_FILE}/main.log</file>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -14,7 +14,7 @@
 			</fileNamePattern>
 
 			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>64MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
@@ -23,9 +23,9 @@
 			<pattern>${FILE_LOG_PATTERN}</pattern>
 		</encoder>
 	</appender>
-	
+
 	<appender name="HTTP_LOG"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_FILE}/http.log</file>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -34,7 +34,7 @@
 			</fileNamePattern>
 
 			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>128MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
@@ -42,51 +42,52 @@
 			<charset>utf8</charset>
 			<pattern>${FILE_LOG_PATTERN}</pattern>
 		</encoder>
-	</appender>	
-	
+	</appender>
+
 	<appender name="SERIOUS_FILE"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-          <level>WARN</level>
-        </filter>
+			<level>WARN</level>
+		</filter>
 		<file>${LOG_FILE}/warn.log</file>
-	    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-	        <fileNamePattern>${LOG_FILE}/%d{MMddyyyy}/%i.main.log.zip
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${LOG_FILE}/%d{MMddyyyy}/%i.main.log.zip
 			</fileNamePattern>
-	    </rollingPolicy>
-  
-	    <triggeringPolicy
-	        class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-	        <maxFileSize>64MB</maxFileSize>
-	    </triggeringPolicy>
+		</rollingPolicy>
+
+		<triggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>64MB</maxFileSize>
+		</triggeringPolicy>
 		<encoder>
 			<charset>utf8</charset>
 			<pattern>${FILE_LOG_PATTERN}</pattern>
 		</encoder>
 	</appender>
-	
+
 	<logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR" />
 
 	<springProfile name="default,dev">
-		<logger name="com.framework" level="INFO" />
-		<logger name="com.xm" level="INFO" />
-		<root level="INFO">
+		<logger name="com.framework" level="DEBUG" />
+		<logger name="com.xm" level="DEBUG" />
+		<root level="DEBUG">
 			<appender-ref ref="CONSOLE" />
 			<appender-ref ref="ROLLING_FILE" />
 		</root>
 	</springProfile>
-	
+
 	<springProfile name="pro">
-		<logger name="com.xm" level="INFO" />
-		<logger name="com.framework" level="INFO" />
-		<logger name="org.apache.http.headers" level="INFO" additivity="false" >
+		<logger name="com.xm" level="DEBUG" />
+		<logger name="com.framework" level="DEBUG" />
+		<!--druid.sql的log太详细-->
+		<logger name="druid.sql" level="INFO" />
+		<logger name="org.apache.http.headers" level="DEBUG" additivity="false" >
 			<appender-ref ref="HTTP_LOG" />
 		</logger>
 		<logger name="org.hibernate.SQL" level="INFO" />
 		<!--druid.sql的log太详细-->
 		<!--<logger name="druid.sql" level="DEBUG" />-->
 		<root level="INFO">
-			<!--<appender-ref ref="CONSOLE" />-->
 			<appender-ref ref="ROLLING_FILE" />
 			<appender-ref ref="SERIOUS_FILE" />
 		</root>

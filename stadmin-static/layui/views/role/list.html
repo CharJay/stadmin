@@ -210,7 +210,7 @@
 
     function deleteById(seqId){
       app.ajax({
-        url: app.getUrl('deleteById',[global.tableName]), //实际使用请改成服务端真实接口
+        url: app.getUrl('deleteById',[global.tableName]),
         data:{'seqId':seqId},
         type: "post",
         dataType: "json",

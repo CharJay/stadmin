@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,26 +20,29 @@
             <form id="select-form" class="layui-form" lay-filter="component-form-group">
               <!--新增-->
               <div class="layui-form-item">
-                <!-- <div class="layui-inline">
+                <div class="layui-inline">
                   <div class="layui-btn-group table-operate-btn">
-                    <button class="layui-btn" type="button" data-type="create"><i class="layui-icon">&#xe608;</i>新建</button>
+                    <button autho="stmsOrg_create" class="autho layui-hide layui-btn" type="button" data-type="create"><i class="layui-icon">&#xe608;</i>新建</button>
                   </div> 
-                </div> -->
+                </div>
                 <!--条件查询-->
                 <div class="layui-inline">
                   <div class="layui-input-inline">
-                    <select name="type" lay-verify="" placeholder="类型">
-                      <option value=""></option>
-                      <option value="1" >模块</option>
-                      <option value="2" >菜单</option>
-                      <option value="3" >按钮</option>
-                    </select> 
+                    <input type="text" name="input" autocomplete="off" class="layui-input" placeholder="输入框">
                   </div>
                   <div class="layui-input-inline">
-                    <input type="text" name="name" autocomplete="off" class="layui-input" placeholder="权限名">
+	              	<input type="text" name="date" autocomplete="off" class="layui-input date" placeholder="日期">
+	              </div>
+                  <div class="layui-input-inline">
+                    <select name="status" lay-verify="" placeholder="下拉框">
+                      <option value="">下拉框</option>
+                      <option value="1" >类型1</option>
+                      <option value="2" >类型2</option>
+                    </select> 
                   </div>
                 </div>
-
+                
+	
                 <!--搜索-->
                 <div class="layui-inline">
                   <div class="layui-btn-group table-operate-btn">
@@ -77,7 +78,7 @@
     ,dataTable;//引入了app，那么默认引入了setter，因为app里面引入了setter
     
     var global={
-      tableName:'sysAutho',
+      tableName:'stmsOrg',
     }
     start();
 
@@ -166,7 +167,8 @@
           if(value){//过滤空值
             param[index]=value;
           }
-        })
+        });
+        //TODO 可以设置默认搜索值
         dataTable.reload({
           page: {
             curr: 0 //重新从第 1 页开始
@@ -181,7 +183,7 @@
       dataTable=table.render({
         elem: '#table-operate'
         ,url: app.getUrl('readAndCount',[global.tableName])
-        ,cellMinWidth: 80
+   	  	,cellMinWidth: 80
         ,method: 'post'
         ,height: 'full-110'
         ,request: setter.request
@@ -189,21 +191,32 @@
         ,page: true
         ,limit: 10
         ,where: {
-          //...
+          //TODO 第一次搜索的默认值
         }
         ,cols: [[
           // {type:'checkbox', fixed: 'left'},
-          {field:'seqId', title: 'ID', fixed: 'left'}
-          ,{field:'name', title: '权限名'}
-          ,{field:'enName', title: '英文名'}
-          ,{field:'type', title: '类型', templet: '#table_type'}
-          ,{field:'superId', title: '上级ID'}
-          ,{field:'createTime', title: '创建时间'}
-          ,{title:'操作', align:'center', fixed: 'right', toolbar: '#table-operate-bar'}
+          {field:'seqId', title: 'ID',width:100},
+          {field:'name', title: '组织机构名称',width:100},
+          {field:'descr', title: '描述',width:100},
+          {field:'superId', title: '父节点ID',width:100},
+          {field:'nodeLevel', title: '节点层级',width:100},
+          {field:'nodePath', title: '节点路径',width:100},
+          {field:'portalKey', title: '门户标识',width:100},
+          {field:'isLeaf', title: '叶子节点',width:100},
+          {field:'superName', title: '上级名称',width:100},
+          {field:'nodePathName', title: '节点路径名称',width:100},
+          {field:'idcard', title: '机构编号',width:100},
+          {field:'createTime', title: '创建时间',width:100},
+          {field:'updateTime', title: '修改时间',width:100},
+          {field:'dversion', title: '数据版本',width:100},
+          {field:'isDel', title: '是否删除',width:100},
+          {field:'dataOrder', title: '排序',width:100},
+          {title:'操作', minWidth:200, align:'left', fixed: 'right', toolbar: '#table-operate-bar'}
         ]]
         ,done:function(){
             app.initButton(app.param.mid);
         }
+
       });
       
     }
@@ -229,19 +242,19 @@
 
   <!-- 模板 -->
   <script type="text/html" id="table-operate-bar">
+    <a autho="stmsOrg_readById" class="autho layui-hide layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a autho="stmsOrg_updateById" class="autho layui-hide layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a autho="stmsOrg_deleteById" class="autho layui-hide layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
   </script>
-<!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
 
   <!-- 数据字典 -->
-  <script type="text/html" id="table_type">
-    {{#  if(d.type==1){ }}
-	模块
-    {{#  } else if(d.type==2){ }}
-	菜单
+  <script type="text/html" id="table_sex">
+    {{#  if(d.sex==1){ }}
+      男
+    {{#  } else if(d.sex==2){ }}
+      女
     {{#  } else{ }}
-	按钮
+      未知
     {{#  } }}
   </script>
 

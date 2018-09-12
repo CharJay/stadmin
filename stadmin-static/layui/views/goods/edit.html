@@ -298,7 +298,7 @@
     function readById(){
     	  
 	      app.ajax({
-	        url: app.getUrl('readById',[global.tableName]), //实际使用请改成服务端真实接口
+	        url: app.getUrl('readById',[global.tableName]),
 	        data:{'seqId':global.seqId},
 	        type: "post",
 	        dataType: "json",
@@ -362,7 +362,7 @@
       
       param.seqId=global.seqId;
       app.ajax({
-        url: app.getUrl('updateById',[global.tableName]), //实际使用请改成服务端真实接口
+        url: app.getUrl('updateById',[global.tableName]),
         data:param,
         type: "post",
         dataType: "json",

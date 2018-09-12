@@ -75,7 +75,7 @@
 			console.log(data.othis); //得到美化后的DOM对象
 			
 			app.ajax({
-		        url: app.getUrl('grantRole'), //实际使用请改成服务端真实接口
+		        url: app.getUrl('grantRole'),
 		        data:{'userId': global.seqId, 'roleId': roleId, 'isGrant': data.elem.checked?1:0},
 		        type: "post",
 		        dataType: "json",
@@ -88,7 +88,7 @@
     function getRoleList(){
 
       app.ajax({
-        url: app.getUrl('getRoleList'), //实际使用请改成服务端真实接口
+        url: app.getUrl('getRoleList'),
         data:{'userId': global.seqId},
         type: "post",
         dataType: "json",

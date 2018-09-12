@@ -91,7 +91,7 @@ layui.define(["setter"],function(exports){
         },
         initButton:function(superId){
           this.ajax({
-            url: this.getUrl('button'), //实际使用请改成服务端真实接口
+            url: this.getUrl('button'),
             data:{'superId':superId},
             type: "post",
             dataType: "json",
